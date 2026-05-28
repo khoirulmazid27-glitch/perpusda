@@ -103,17 +103,30 @@ class KaryawanController extends Controller
 
     // ── UPDATE ───────────────────────────────────────────────────────────────
 
+    // ── UPDATE ───────────────────────────────────────────────────────────────
+
     public function update(Request $request, Karyawan $karyawan)
     {
         $validated = $request->validate($this->rules($karyawan->id_karyawan));
 
         if ($request->hasFile('foto')) {
-            // Hapus foto lama jika ada
+            // Ada foto baru → hapus foto lama dulu, simpan yang baru
             if ($karyawan->foto) {
                 Storage::disk('public')->delete($karyawan->foto);
             }
             $validated['foto'] = $request->file('foto')
                 ->store('karyawan/foto', 'public');
+
+        } elseif ($request->input('hapus_foto') === '1') {
+            // User klik "Hapus Foto" tanpa upload baru → hapus saja
+            if ($karyawan->foto) {
+                Storage::disk('public')->delete($karyawan->foto);
+            }
+            $validated['foto'] = null;
+
+        } else {
+            // Tidak ada perubahan foto → pertahankan foto lama
+            unset($validated['foto']);
         }
 
         $karyawan->update($validated);

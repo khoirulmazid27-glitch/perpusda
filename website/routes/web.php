@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\PendidikanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,7 +14,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::resource('karyawan', KaryawanController::class);
+Route::resource('karyawan', KaryawanController::class)->names('karyawan');;
 
 // ── Export ───────────────────────────────────────────────────────────────────
 Route::get('karyawan-export-excel', [KaryawanController::class, 'exportExcel'])
@@ -29,6 +30,8 @@ Route::post('karyawan-import', [KaryawanController::class, 'importExcel'])
 // ── Hapus Foto ───────────────────────────────────────────────────────────────
 Route::delete('karyawan/{karyawan}/foto', [KaryawanController::class, 'deleteFoto'])
     ->name('karyawan.delete-foto');
+
+Route::resource('pendidikan', PendidikanController::class)->names('pendidikan');;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
