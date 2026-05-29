@@ -7,6 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jabatan extends Model
 {
-    /** @use HasFactory<\Database\Factories\JabatansFactory> */
     use HasFactory;
+
+    protected $primaryKey = 'id_jabatan';
+
+    protected $fillable = [
+        'nama_jabatan',
+    ];
+
+    public function karyawans()
+    {
+        return $this->hasMany(Karyawan::class, 'id_jabatan', 'id_jabatan');
+    }
 }

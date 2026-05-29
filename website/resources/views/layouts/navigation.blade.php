@@ -26,6 +26,17 @@
                         {{ __('Pendidikan') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('jabatan.index')" :active="request()->routeIs('jabatan.index')">
+                        {{ __('Jabatan') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('kontrak.index')" :active="request()->routeIs('kontrak.index')">
+                        {{ __('Kontrak') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -85,6 +96,12 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('pendidikan.index')" :active="request()->routeIs('pendidikan.index')">
                 {{ __('Pendidikan') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('jabatan.index')" :active="request()->routeIs('jabatan.index')">
+                {{ __('Jabatan') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('kontrak.index')" :active="request()->routeIs('kontrak.index')">
+                {{ __('Kontrak') }}
             </x-responsive-nav-link>
         </div>
 
