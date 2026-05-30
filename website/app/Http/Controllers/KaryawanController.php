@@ -103,8 +103,6 @@ class KaryawanController extends Controller
 
     // ── UPDATE ───────────────────────────────────────────────────────────────
 
-    // ── UPDATE ───────────────────────────────────────────────────────────────
-
     public function update(Request $request, Karyawan $karyawan)
     {
         $validated = $request->validate($this->rules($karyawan->id_karyawan));
@@ -150,30 +148,30 @@ class KaryawanController extends Controller
 
     // ── EXPORT EXCEL ─────────────────────────────────────────────────────────
 
-    // Export Excel
-public function exportExcel(Request $request)
-{
-    $export = new \App\Exports\KaryawanExport($request->all());
-    return $export->download('karyawan_' . now()->format('Ymd_His') . '.xlsx');
-}
-
-// Import Excel
-public function importExcel(Request $request)
-{
-    $request->validate([
-        'file' => 'required|file|mimes:xlsx,xls|max:5120',
-    ]);
-
-    $import = new \App\Imports\KaryawanImport();
-    $import->import($request->file('file'));
-
-    $msg = "Import berhasil: {$import->imported} data.";
-    if (!empty($import->errors)) {
-        $msg .= ' Gagal: ' . implode('; ', $import->errors);
+    public function exportExcel(Request $request)
+    {
+        $export = new \App\Exports\KaryawanExport($request->all());
+        return $export->download('karyawan_' . now()->format('Ymd_His') . '.xlsx');
     }
 
-    return redirect()->route('karyawan.index')->with('success', $msg);
-}
+    // ── IMPORT EXCEL ─────────────────────────────────────────────────────────
+
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls|max:5120',
+        ]);
+
+        $import = new \App\Imports\KaryawanImport();
+        $import->import($request->file('file'));
+
+        $msg = "Import berhasil: {$import->imported} data.";
+        if (!empty($import->errors)) {
+            $msg .= ' Gagal: ' . implode('; ', $import->errors);
+        }
+
+        return redirect()->route('karyawan.index')->with('success', $msg);
+    }
 
     // ── EXPORT PDF ───────────────────────────────────────────────────────────
 
@@ -196,10 +194,6 @@ public function importExcel(Request $request)
         return $pdf->download('karyawan_' . now()->format('Ymd_His') . '.pdf');
     }
 
-    // ── IMPORT EXCEL ─────────────────────────────────────────────────────────
-
-
-
     // ── HAPUS FOTO ───────────────────────────────────────────────────────────
 
     public function deleteFoto(Karyawan $karyawan)
@@ -220,6 +214,8 @@ public function importExcel(Request $request)
             'nama_lengkap'          => 'required|string|max:255',
             'nip'                   => ['required', 'string', 'max:50', Rule::unique('karyawans', 'nip')->ignore($ignoreId, 'id_karyawan')],
             'nik'                   => ['required', 'string', 'max:20', Rule::unique('karyawans', 'nik')->ignore($ignoreId, 'id_karyawan')],
+            'jenis_kelamin'         => 'nullable|in:Laki-laki,Perempuan',
+            'tanggal_lahir'         => 'nullable|date|before:today',
             'tanggal_masuk'         => 'required|date',
             'tanggal_mulai_jabatan' => 'required|date',
             'alamat'                => 'nullable|string',

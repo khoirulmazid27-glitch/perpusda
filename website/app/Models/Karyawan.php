@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
+use App\Models\Jabatan;
+use App\Models\Pendidikan;
+use App\Models\JenisKontrak;
+
 class Karyawan extends Model
 {
     protected $primaryKey = 'id_karyawan';
@@ -13,6 +17,8 @@ class Karyawan extends Model
         'nama_lengkap',
         'nip',
         'nik',
+        'jenis_kelamin',
+        'tanggal_lahir',
         'tanggal_masuk',
         'alamat',
         'agama',
@@ -27,6 +33,7 @@ class Karyawan extends Model
     ];
 
     protected $casts = [
+        'tanggal_lahir'        => 'date',
         'tanggal_masuk'        => 'date',
         'tanggal_mulai_jabatan'=> 'date',
         'gaji'                 => 'decimal:2',

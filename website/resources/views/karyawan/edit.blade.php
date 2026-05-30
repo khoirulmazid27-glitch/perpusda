@@ -135,6 +135,39 @@
                                     @enderror
                                 </div>
 
+                                {{-- Jenis Kelamin --}}
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">Jenis Kelamin</label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        @foreach(['Laki-laki' => '♂', 'Perempuan' => '♀'] as $jk => $icon)
+                                            <label class="relative cursor-pointer">
+                                                <input type="radio" name="jenis_kelamin" value="{{ $jk }}"
+                                                       {{ old('jenis_kelamin', $karyawan->jenis_kelamin) == $jk ? 'checked' : '' }}
+                                                       class="peer sr-only">
+                                                <span class="flex items-center justify-center gap-1.5 h-10 text-xs font-semibold border-2 border-gray-200 rounded-xl text-gray-500 transition-all cursor-pointer
+                                                    peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700
+                                                    hover:border-blue-300 hover:text-blue-600">
+                                                    {{ $icon }} {{ $jk }}
+                                                </span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                    @error('jenis_kelamin')
+                                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                {{-- Tanggal Lahir --}}
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">Tanggal Lahir</label>
+                                    <input type="date" name="tanggal_lahir"
+                                           value="{{ old('tanggal_lahir', $karyawan->tanggal_lahir?->format('Y-m-d')) }}"
+                                           class="w-full px-3.5 py-2.5 text-sm border rounded-xl bg-white text-gray-900 outline-none transition-all focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('tanggal_lahir') border-red-400 ring-2 ring-red-100 @else border-gray-300 @enderror">
+                                    @error('tanggal_lahir')
+                                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-600 mb-1.5">Agama</label>
                                     <select name="agama"

@@ -1,4 +1,3 @@
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -6,7 +5,6 @@
         </h2>
     </x-slot>
 
-    {{-- ── Inject Chart.js sekali di head ── --}}
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     @endpush
@@ -14,12 +12,9 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
-            {{-- ══════════════════════════════════════════════════════
-                 BARIS 1 — Kartu Statistik Utama
-            ══════════════════════════════════════════════════════ --}}
+            {{-- BARIS 1 — Kartu Statistik Utama --}}
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-                {{-- Total Karyawan --}}
                 <div class="bg-white rounded-2xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
                     <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -32,7 +27,6 @@
                     </div>
                 </div>
 
-                {{-- Karyawan Aktif --}}
                 <div class="bg-white rounded-2xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
                     <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
                         <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -45,7 +39,6 @@
                     </div>
                 </div>
 
-                {{-- Karyawan Cuti --}}
                 <div class="bg-white rounded-2xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
                     <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center">
                         <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -58,7 +51,6 @@
                     </div>
                 </div>
 
-                {{-- Pensiun & Resign --}}
                 <div class="bg-white rounded-2xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
                     <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center">
                         <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -72,21 +64,15 @@
                 </div>
             </div>
 
-            {{-- ══════════════════════════════════════════════════════
-                 BARIS 2 — Info Gaji + Info Master Data
-            ══════════════════════════════════════════════════════ --}}
+            {{-- BARIS 2 — Info Gaji + Master Data --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-                {{-- Total Gaji --}}
                 <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl shadow-sm p-5 text-white">
                     <p class="text-xs font-semibold uppercase tracking-widest text-blue-200">Total Gaji Aktif</p>
                     <p class="text-3xl font-extrabold mt-1">Rp {{ number_format($totalGaji, 0, ',', '.') }}</p>
                     <p class="text-xs text-blue-200 mt-2">Rata-rata: Rp {{ number_format($rataRataGaji, 0, ',', '.') }} / orang</p>
                 </div>
 
-                {{-- Master Data Cards --}}
                 <div class="col-span-1 md:col-span-2 grid grid-cols-3 gap-4">
-
                     <div class="bg-white rounded-2xl shadow-sm p-5 border border-gray-100 text-center">
                         <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-2">
                             <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -96,7 +82,6 @@
                         <p class="text-2xl font-bold text-gray-800">{{ $totalJabatan }}</p>
                         <p class="text-xs text-gray-500 mt-1">Jabatan</p>
                     </div>
-
                     <div class="bg-white rounded-2xl shadow-sm p-5 border border-gray-100 text-center">
                         <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-2">
                             <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -106,7 +91,6 @@
                         <p class="text-2xl font-bold text-gray-800">{{ $totalPendidikan }}</p>
                         <p class="text-xs text-gray-500 mt-1">Pendidikan</p>
                     </div>
-
                     <div class="bg-white rounded-2xl shadow-sm p-5 border border-gray-100 text-center">
                         <div class="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center mx-auto mb-2">
                             <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -120,39 +104,194 @@
             </div>
 
             {{-- ══════════════════════════════════════════════════════
-                 BARIS 3 — Chart: Karyawan Masuk per Bulan
-            ══════════════════════════════════════════════════════ --}}
-            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
-                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
-                    Karyawan Masuk — 12 Bulan Terakhir
-                </h3>
-                <div class="relative h-52">
-                    <canvas id="chartBulan"></canvas>
-                </div>
-            </div>
-
-            {{-- ══════════════════════════════════════════════════════
-                 BARIS 4 — Chart Jabatan + Chart Pendidikan & Kontrak
+                 BARIS 3 — Demografi Gender (PENGGANTI chart bulan)
             ══════════════════════════════════════════════════════ --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                {{-- Chart per Jabatan (Bar horizontal) --}}
+                {{-- GRID LAKI-LAKI --}}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    {{-- Header --}}
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                                {{-- Ikon laki-laki --}}
+                                <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 11.75A2.75 2.75 0 1 0 9 6.25a2.75 2.75 0 0 0 0 5.5zm0 1.5C6.58 13.25 2 14.46 2 17v1.5h14V17c0-2.54-4.58-3.75-7-3.75z"/>
+                                    <path d="M15.5 2v2h2.09l-3.3 3.3A5.48 5.48 0 0 0 9 5.5C6.24 5.5 4 7.74 4 10.5S6.24 15.5 9 15.5s5-2.24 5-5c0-1.3-.48-2.49-1.27-3.4L16 3.83V6h2V2h-2.5z" opacity=".3"/>
+                                    <path d="M19 2h-5v2h3.09l-3.57 3.57A4.965 4.965 0 0 0 9 6c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5c0-1.23-.45-2.35-1.18-3.22L16.17 4H19V2zM9 14c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-gray-800">Laki-laki</h3>
+                                <p class="text-xs text-gray-500">Distribusi usia</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-3xl font-extrabold text-blue-600">{{ number_format($totalLaki) }}</p>
+                            <p class="text-xs text-gray-400">karyawan</p>
+                        </div>
+                    </div>
+
+                    {{-- Progress bar total vs keseluruhan --}}
+                    @php $pctLaki = $totalKaryawan > 0 ? round($totalLaki / $totalKaryawan * 100) : 0; @endphp
+                    <div class="mb-5">
+                        <div class="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>Proporsi dari total karyawan</span>
+                            <span class="font-semibold text-blue-600">{{ $pctLaki }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-2">
+                            <div class="bg-blue-500 h-2 rounded-full transition-all" style="width: {{ $pctLaki }}%"></div>
+                        </div>
+                    </div>
+
+                    {{-- Pie chart + legenda --}}
+                    <div class="flex items-center gap-5">
+                        <div class="relative flex-shrink-0" style="width:130px;height:130px">
+                            <canvas id="chartLaki"></canvas>
+                            {{-- Label tengah --}}
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div class="text-center">
+                                    <p class="text-lg font-bold text-gray-800">{{ $totalLaki }}</p>
+                                    <p class="text-xs text-gray-400">total</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul class="flex-1 space-y-2">
+                            @php
+                                $umurLakiLabels  = ['20–30 thn', '31–40 thn', '41–50 thn', '50+ thn'];
+                                $umurLakiColors  = ['#3b82f6', '#6366f1', '#8b5cf6', '#a5b4fc'];
+                                $umurLakiValues  = array_values($umurLaki);
+                            @endphp
+                            @foreach ($umurLakiLabels as $i => $label)
+                            @php $total_i = $umurLakiValues[$i]; @endphp
+                            <li class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full flex-shrink-0"
+                                      style="background:{{ $umurLakiColors[$i] }}"></span>
+                                <span class="text-xs text-gray-600 flex-1">{{ $label }}</span>
+                                <span class="text-xs font-bold text-gray-800">{{ $total_i }}</span>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    {{-- Detail bar per kelompok --}}
+                    <div class="mt-5 space-y-2">
+                        @foreach ($umurLakiLabels as $i => $label)
+                        @php
+                            $val = $umurLakiValues[$i];
+                            $pct = $totalLaki > 0 ? round($val / $totalLaki * 100) : 0;
+                        @endphp
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-500 mb-0.5">
+                                <span>{{ $label }}</span>
+                                <span class="font-semibold" style="color:{{ $umurLakiColors[$i] }}">{{ $val }} orang ({{ $pct }}%)</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                <div class="h-1.5 rounded-full" style="width:{{ $pct }}%;background:{{ $umurLakiColors[$i] }}"></div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- GRID PEREMPUAN --}}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    {{-- Header --}}
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-pink-100 flex items-center justify-center">
+                                {{-- Ikon perempuan --}}
+                                <svg class="w-6 h-6 text-pink-500" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zm0 12c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-gray-800">Perempuan</h3>
+                                <p class="text-xs text-gray-500">Distribusi usia</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-3xl font-extrabold text-pink-500">{{ number_format($totalPerempuan) }}</p>
+                            <p class="text-xs text-gray-400">karyawan</p>
+                        </div>
+                    </div>
+
+                    {{-- Progress bar total vs keseluruhan --}}
+                    @php $pctPerempuan = $totalKaryawan > 0 ? round($totalPerempuan / $totalKaryawan * 100) : 0; @endphp
+                    <div class="mb-5">
+                        <div class="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>Proporsi dari total karyawan</span>
+                            <span class="font-semibold text-pink-500">{{ $pctPerempuan }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-2">
+                            <div class="bg-pink-400 h-2 rounded-full transition-all" style="width: {{ $pctPerempuan }}%"></div>
+                        </div>
+                    </div>
+
+                    {{-- Pie chart + legenda --}}
+                    <div class="flex items-center gap-5">
+                        <div class="relative flex-shrink-0" style="width:130px;height:130px">
+                            <canvas id="chartPerempuan"></canvas>
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div class="text-center">
+                                    <p class="text-lg font-bold text-gray-800">{{ $totalPerempuan }}</p>
+                                    <p class="text-xs text-gray-400">total</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul class="flex-1 space-y-2">
+                            @php
+                                $umurPrLabels = ['20–30 thn', '31–40 thn', '41–50 thn', '50+ thn'];
+                                $umurPrColors = ['#ec4899', '#f43f5e', '#fb7185', '#fda4af'];
+                                $umurPrValues = array_values($umurPerempuan);
+                            @endphp
+                            @foreach ($umurPrLabels as $i => $label)
+                            <li class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full flex-shrink-0"
+                                      style="background:{{ $umurPrColors[$i] }}"></span>
+                                <span class="text-xs text-gray-600 flex-1">{{ $label }}</span>
+                                <span class="text-xs font-bold text-gray-800">{{ $umurPrValues[$i] }}</span>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    {{-- Detail bar per kelompok --}}
+                    <div class="mt-5 space-y-2">
+                        @foreach ($umurPrLabels as $i => $label)
+                        @php
+                            $val = $umurPrValues[$i];
+                            $pct = $totalPerempuan > 0 ? round($val / $totalPerempuan * 100) : 0;
+                        @endphp
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-500 mb-0.5">
+                                <span>{{ $label }}</span>
+                                <span class="font-semibold" style="color:{{ $umurPrColors[$i] }}">{{ $val }} orang ({{ $pct }}%)</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                <div class="h-1.5 rounded-full" style="width:{{ $pct }}%;background:{{ $umurPrColors[$i] }}"></div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            {{-- BARIS 4 — Chart Jabatan + Chart Pendidikan & Kontrak --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                 <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
-                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
-                        Distribusi per Jabatan
-                    </h3>
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Distribusi per Jabatan</h3>
                     <div class="relative h-56">
                         <canvas id="chartJabatan"></canvas>
                     </div>
                 </div>
 
-                {{-- Chart Pendidikan (Doughnut) + Kontrak (list) --}}
                 <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 space-y-5">
-
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
-                            Distribusi per Pendidikan
-                        </h3>
+                        <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Distribusi per Pendidikan</h3>
                         <div class="flex items-center gap-6">
                             <div class="relative w-36 h-36 flex-shrink-0">
                                 <canvas id="chartPendidikan"></canvas>
@@ -171,14 +310,10 @@
                     <hr class="border-gray-100">
 
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
-                            Jenis Kontrak
-                        </h3>
+                        <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Jenis Kontrak</h3>
                         <ul class="space-y-2">
                             @foreach ($karyawanPerKontrak as $item)
-                            @php
-                                $pct = $totalKaryawan > 0 ? round($item->total / $totalKaryawan * 100) : 0;
-                            @endphp
+                            @php $pct = $totalKaryawan > 0 ? round($item->total / $totalKaryawan * 100) : 0; @endphp
                             <li>
                                 <div class="flex justify-between text-xs mb-1">
                                     <span class="text-gray-600">{{ $item->nama_kontrak }}</span>
@@ -191,21 +326,14 @@
                             @endforeach
                         </ul>
                     </div>
-
                 </div>
             </div>
 
-            {{-- ══════════════════════════════════════════════════════
-                 BARIS 5 — Tabel Karyawan Terbaru
-            ══════════════════════════════════════════════════════ --}}
+            {{-- BARIS 5 — Tabel Karyawan Terbaru --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                        Karyawan Terbaru
-                    </h3>
-                    {{-- <a href="{{ route('karyawan.index') }}" class="text-xs text-blue-600 hover:underline font-medium">
-                        Lihat Semua →
-                    </a> --}}
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Karyawan Terbaru</h3>
+                    <a href="{{ route('karyawan.index') }}" class="text-xs text-blue-600 hover:underline font-medium">Lihat Semua →</a>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-sm">
@@ -226,9 +354,7 @@
                                 <td class="px-6 py-3 text-gray-500 font-mono text-xs">{{ $k->nip }}</td>
                                 <td class="px-6 py-3 text-gray-600">{{ $k->jabatan?->nama_jabatan ?? '-' }}</td>
                                 <td class="px-6 py-3 text-gray-600">{{ $k->jenisKontrak?->nama_kontrak ?? '-' }}</td>
-                                <td class="px-6 py-3 text-gray-500">
-                                    {{ \Carbon\Carbon::parse($k->tanggal_masuk)->format('d M Y') }}
-                                </td>
+                                <td class="px-6 py-3 text-gray-500">{{ \Carbon\Carbon::parse($k->tanggal_masuk)->format('d M Y') }}</td>
                                 <td class="px-6 py-3">
                                     @php
                                         $badge = match($k->status_aktif) {
@@ -239,16 +365,12 @@
                                             default   => 'bg-gray-100 text-gray-600',
                                         };
                                     @endphp
-                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $badge }}">
-                                        {{ $k->status_aktif }}
-                                    </span>
+                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $badge }}">{{ $k->status_aktif }}</span>
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-6 text-center text-gray-400 text-sm">
-                                    Belum ada data karyawan.
-                                </td>
+                                <td colspan="6" class="px-6 py-6 text-center text-gray-400 text-sm">Belum ada data karyawan.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -256,69 +378,23 @@
                 </div>
             </div>
 
-        </div>{{-- /max-w-7xl --}}
-    </div>{{-- /py-8 --}}
+        </div>
+    </div>
 
-    {{-- ══════════════════════════════════════════════════════
-         Scripts Chart.js
-    ══════════════════════════════════════════════════════ --}}
     @push('scripts')
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // ── Palet warna ────────────────────────────────────────
-        const palette = [
-            '#3b82f6','#6366f1','#8b5cf6','#ec4899',
-            '#f59e0b','#10b981','#14b8a6','#f43f5e',
-        ];
+        const palette = ['#3b82f6','#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981','#14b8a6','#f43f5e'];
 
-        // ── 1. Chart Karyawan per Bulan (Line) ─────────────────
-        const bulanLabels = @json($karyawanPerBulan->pluck('label'));
-        const bulanData   = @json($karyawanPerBulan->pluck('total'));
-
-        new Chart(document.getElementById('chartBulan'), {
-            type: 'line',
-            data: {
-                labels: bulanLabels,
-                datasets: [{
-                    label: 'Karyawan Masuk',
-                    data: bulanData,
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59,130,246,.12)',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#3b82f6',
-                    pointRadius: 4,
-                    fill: true,
-                    tension: 0.4,
-                }],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1, font: { size: 11 } },
-                        grid: { color: '#f3f4f6' },
-                    },
-                    x: { ticks: { font: { size: 11 } }, grid: { display: false } },
-                },
-            },
-        });
-
-        // ── 2. Chart Karyawan per Jabatan (Bar horizontal) ─────
-        const jabatanLabels = @json($karyawanPerJabatan->pluck('nama_jabatan'));
-        const jabatanData   = @json($karyawanPerJabatan->pluck('total'));
-
+        // ── Chart Jabatan (Bar horizontal) ──────────────────────────────────
         new Chart(document.getElementById('chartJabatan'), {
             type: 'bar',
             data: {
-                labels: jabatanLabels,
+                labels: @json($karyawanPerJabatan->pluck('nama_jabatan')),
                 datasets: [{
-                    label: 'Jumlah',
-                    data: jabatanData,
-                    backgroundColor: palette.slice(0, jabatanData.length),
+                    data: @json($karyawanPerJabatan->pluck('total')),
+                    backgroundColor: palette,
                     borderRadius: 6,
                     borderSkipped: false,
                 }],
@@ -329,27 +405,20 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    x: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1, font: { size: 11 } },
-                        grid: { color: '#f3f4f6' },
-                    },
+                    x: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 } }, grid: { color: '#f3f4f6' } },
                     y: { ticks: { font: { size: 11 } }, grid: { display: false } },
                 },
             },
         });
 
-        // ── 3. Chart Pendidikan (Doughnut) ─────────────────────
-        const pendLabels = @json($karyawanPerPendidikan->pluck('nama_pendidikan'));
-        const pendData   = @json($karyawanPerPendidikan->pluck('total'));
-
+        // ── Chart Pendidikan (Doughnut) ──────────────────────────────────────
         new Chart(document.getElementById('chartPendidikan'), {
             type: 'doughnut',
             data: {
-                labels: pendLabels,
+                labels: @json($karyawanPerPendidikan->pluck('nama_pendidikan')),
                 datasets: [{
-                    data: pendData,
-                    backgroundColor: palette.slice(0, pendData.length),
+                    data: @json($karyawanPerPendidikan->pluck('total')),
+                    backgroundColor: palette,
                     borderWidth: 2,
                     borderColor: '#fff',
                     hoverOffset: 6,
@@ -361,9 +430,63 @@
                 cutout: '70%',
                 plugins: {
                     legend: { display: false },
-                    tooltip: { callbacks: {
-                        label: ctx => ` ${ctx.label}: ${ctx.parsed}`
-                    }},
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}` } },
+                },
+            },
+        });
+
+        // ── Chart Laki-laki (Doughnut) ───────────────────────────────────────
+        const lakiData   = @json(array_values($umurLaki));
+        const lakiColors = ['#3b82f6','#6366f1','#8b5cf6','#a5b4fc'];
+        const lakiLabels = ['20–30 thn','31–40 thn','41–50 thn','50+ thn'];
+
+        new Chart(document.getElementById('chartLaki'), {
+            type: 'doughnut',
+            data: {
+                labels: lakiLabels,
+                datasets: [{
+                    data: lakiData,
+                    backgroundColor: lakiColors,
+                    borderWidth: 2,
+                    borderColor: '#fff',
+                    hoverOffset: 6,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '68%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} orang` } },
+                },
+            },
+        });
+
+        // ── Chart Perempuan (Doughnut) ───────────────────────────────────────
+        const prData   = @json(array_values($umurPerempuan));
+        const prColors = ['#ec4899','#f43f5e','#fb7185','#fda4af'];
+        const prLabels = ['20–30 thn','31–40 thn','41–50 thn','50+ thn'];
+
+        new Chart(document.getElementById('chartPerempuan'), {
+            type: 'doughnut',
+            data: {
+                labels: prLabels,
+                datasets: [{
+                    data: prData,
+                    backgroundColor: prColors,
+                    borderWidth: 2,
+                    borderColor: '#fff',
+                    hoverOffset: 6,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '68%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} orang` } },
                 },
             },
         });

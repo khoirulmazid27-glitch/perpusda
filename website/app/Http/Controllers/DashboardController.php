@@ -8,31 +8,28 @@ use App\Models\Karyawan;
 use App\Models\Pendidikan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 use Carbon\Carbon;
+
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         // ── Statistik utama ──────────────────────────────────────────────────
-        $totalKaryawan      = Karyawan::count();
-        $karyawanAktif      = Karyawan::where('status_aktif', 'Aktif')->count();
-        $karyawanCuti       = Karyawan::where('status_aktif', 'Cuti')->count();
-        $karyawanPensiun    = Karyawan::where('status_aktif', 'Pensiun')->count();
-        $karyawanResign     = Karyawan::where('status_aktif', 'Resign')->count();
+        $totalKaryawan     = Karyawan::count();
+        $karyawanAktif     = Karyawan::where('status_aktif', 'Aktif')->count();
+        $karyawanCuti      = Karyawan::where('status_aktif', 'Cuti')->count();
+        $karyawanPensiun   = Karyawan::where('status_aktif', 'Pensiun')->count();
+        $karyawanResign    = Karyawan::where('status_aktif', 'Resign')->count();
 
-        $totalJabatan       = Jabatan::count();
-        $totalPendidikan    = Pendidikan::count();
-        $totalJenisKontrak  = JenisKontrak::count();
+        $totalJabatan      = Jabatan::count();
+        $totalPendidikan   = Pendidikan::count();
+        $totalJenisKontrak = JenisKontrak::count();
 
         // ── Total & rata-rata gaji (hanya karyawan Aktif) ───────────────────
-        $totalGaji          = Karyawan::where('status_aktif', 'Aktif')->sum('gaji');
-        $rataRataGaji       = Karyawan::where('status_aktif', 'Aktif')->avg('gaji') ?? 0;
+        $totalGaji     = Karyawan::where('status_aktif', 'Aktif')->sum('gaji');
+        $rataRataGaji  = Karyawan::where('status_aktif', 'Aktif')->avg('gaji') ?? 0;
 
-        // ── Distribusi karyawan per jabatan (top 6) ──────────────────────────
+        // ── Distribusi karyawan per jabatan (top 6) ─────────────────────────
         $karyawanPerJabatan = Karyawan::select('jabatans.nama_jabatan', DB::raw('COUNT(*) as total'))
             ->join('jabatans', 'karyawans.id_jabatan', '=', 'jabatans.id_jabatan')
             ->groupBy('jabatans.nama_jabatan')
@@ -40,14 +37,14 @@ class DashboardController extends Controller
             ->limit(6)
             ->get();
 
-        // ── Distribusi karyawan per pendidikan ───────────────────────────────
+        // ── Distribusi karyawan per pendidikan ──────────────────────────────
         $karyawanPerPendidikan = Karyawan::select('pendidikans.nama_pendidikan', DB::raw('COUNT(*) as total'))
             ->join('pendidikans', 'karyawans.id_pendidikan', '=', 'pendidikans.id_pendidikan')
             ->groupBy('pendidikans.nama_pendidikan')
             ->orderByDesc('total')
             ->get();
 
-        // ── Distribusi karyawan per jenis kontrak ────────────────────────────
+        // ── Distribusi karyawan per jenis kontrak ───────────────────────────
         $karyawanPerKontrak = Karyawan::select('jenis_kontraks.nama_kontrak', DB::raw('COUNT(*) as total'))
             ->join('jenis_kontraks', 'karyawans.id_jenis_kontrak', '=', 'jenis_kontraks.id_jenis_kontrak')
             ->groupBy('jenis_kontraks.nama_kontrak')
@@ -60,22 +57,13 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // ── Karyawan masuk per bulan (12 bulan terakhir) ─────────────────────
-        $karyawanPerBulan = Karyawan::select(
-                DB::raw('YEAR(tanggal_masuk) as tahun'),
-                DB::raw('MONTH(tanggal_masuk) as bulan'),
-                DB::raw('COUNT(*) as total')
-            )
-            ->where('tanggal_masuk', '>=', now()->subMonths(11)->startOfMonth())
-            ->groupBy('tahun', 'bulan')
-            ->orderBy('tahun')
-            ->orderBy('bulan')
-            ->get()
-            ->map(function ($item) {
-                $item->label = \Carbon\Carbon::createFromDate($item->tahun, $item->bulan, 1)
-                                ->translatedFormat('M Y');
-                return $item;
-            });
+        // ── Statistik Laki-laki ──────────────────────────────────────────────
+        $totalLaki   = Karyawan::where('jenis_kelamin', 'Laki-laki')->count();
+        $umurLaki    = $this->distribusiUmur('Laki-laki');
+
+        // ── Statistik Perempuan ──────────────────────────────────────────────
+        $totalPerempuan = Karyawan::where('jenis_kelamin', 'Perempuan')->count();
+        $umurPerempuan  = $this->distribusiUmur('Perempuan');
 
         return view('dashboard', compact(
             'totalKaryawan',
@@ -92,55 +80,28 @@ class DashboardController extends Controller
             'karyawanPerPendidikan',
             'karyawanPerKontrak',
             'karyawanTerbaru',
-            'karyawanPerBulan',
+            'totalLaki',
+            'umurLaki',
+            'totalPerempuan',
+            'umurPerempuan',
         ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // ── Helper: distribusi umur per kelompok usia ────────────────────────────
+    private function distribusiUmur(string $jenisKelamin): array
     {
-        //
-    }
+        $today = Carbon::today();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $data = Karyawan::where('jenis_kelamin', $jenisKelamin)
+            ->whereNotNull('tanggal_lahir')
+            ->get(['tanggal_lahir'])
+            ->map(fn($k) => Carbon::parse($k->tanggal_lahir)->diffInYears($today));
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return [
+            '20-30' => $data->filter(fn($u) => $u >= 20 && $u <= 30)->count(),
+            '31-40' => $data->filter(fn($u) => $u >= 31 && $u <= 40)->count(),
+            '41-50' => $data->filter(fn($u) => $u >= 41 && $u <= 50)->count(),
+            '50+'   => $data->filter(fn($u) => $u > 50)->count(),
+        ];
     }
 }
